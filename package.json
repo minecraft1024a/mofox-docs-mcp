@@ -1,0 +1,39 @@
+{
+  "name": "mofox-docs-mcp",
+  "version": "0.1.0",
+  "description": "Neo-MoFox 官方文档 MCP 服务器：通过 Model Context Protocol 搜索与阅读 MoFox-Bot-Docs 文档",
+  "type": "module",
+  "bin": {
+    "mofox-docs-mcp": "./dist/index.js"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/index.js",
+    "dev": "node --watch src/index.ts"
+  },
+  "keywords": [
+    "mcp",
+    "mcp-server",
+    "model-context-protocol",
+    "mofox",
+    "neo-mofox",
+    "docs",
+    "documentation"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.30.0",
+    "zod": "^3.24.0"
+  },
+  "devDependencies": {
+    "@types/node": "^26.0.0",
+    "typescript": "^5.9.0"
+  }
+}
