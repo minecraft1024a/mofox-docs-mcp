@@ -4,7 +4,7 @@
   "description": "Neo-MoFox 官方文档 MCP 服务器：通过 Model Context Protocol 搜索与阅读 MoFox-Bot-Docs 文档",
   "type": "module",
   "bin": {
-    "mofox-docs-mcp": "./dist/index.js"
+    "mofox-docs-mcp": "dist/index.js"
   },
   "files": [
     "dist",
