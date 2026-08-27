@@ -23,18 +23,30 @@ Neo-MoFox 官方文档 MCP 服务器：通过 [Model Context Protocol](https://m
 
 ## 快速开始
 
-### 方式一：npx 直接运行（推荐）
+### 方式一：uvx 直接运行（推荐）
 
 ```bash
-npx -y mofox-docs-mcp
+uvx mofox-docs-mcp
 ```
 
-### 方式二：克隆 / 本地构建
+或使用 pipx：
 
 ```bash
-npm install
-npm run build
-npm start
+pipx run mofox-docs-mcp
+```
+
+### 方式二：pip 安装后运行
+
+```bash
+pip install mofox-docs-mcp
+mofox-docs-mcp
+```
+
+### 方式三：克隆 / 本地构建
+
+```bash
+uv sync            # 或 pip install -e .
+uv run mofox-docs-mcp
 ```
 
 ## 接入 Neo-MoFox
@@ -43,8 +55,8 @@ npm start
 
 ```toml
 [mcp.stdio_servers.mofox-docs]
-command = "npx"
-args = ["-y", "mofox-docs-mcp"]
+command = "uvx"
+args = ["mofox-docs-mcp"]
 instructions = "提供 Neo-MoFox 官方文档的搜索与阅读功能，当用户询问框架功能、配置、插件开发、API 用法时使用"
 ```
 
@@ -56,8 +68,8 @@ instructions = "提供 Neo-MoFox 官方文档的搜索与阅读功能，当用�
 {
   "mcpServers": {
     "mofox-docs": {
-      "command": "npx",
-      "args": ["-y", "mofox-docs-mcp"]
+      "command": "uvx",
+      "args": ["mofox-docs-mcp"]
     }
   }
 }
@@ -76,8 +88,9 @@ instructions = "提供 Neo-MoFox 官方文档的搜索与阅读功能，当用�
 ## 开发
 
 ```bash
-npm run build   # 编译到 dist/
-npm start       # 运行
+uv sync               # 创建虚拟环境并安装依赖
+uv run mofox-docs-mcp # 运行服务器
+uv build              # 构建 sdist / wheel 到 dist/
 ```
 
 ## License

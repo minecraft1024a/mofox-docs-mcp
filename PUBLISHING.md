@@ -1,105 +1,77 @@
-# 发布指南：GitHub + npm
+# 发布指南：PyPI
 
-本目录是 `mofox-docs-mcp` MCP 服务器源码。以下步骤帮你把它发布到 **GitHub**（源码仓库 + Release）和 **npm**（`npx -y mofox-docs-mcp` 直接可用）。
+本目录是 `mofox-docs-mcp` MCP 服务器 Python 源码。以下步骤帮你把它发布到 **PyPI**（`uvx mofox-docs-mcp` / `pip install mofox-docs-mcp` 直接可用）。
 
-> 发布需要你本机已有的账号凭证，因此这里只提供操作指引，命令由你自己执行。
+> 发布需要你自己的 PyPI 账号凭证，因此这里只提供操作指引。
 
 ---
 
 ## 0. 前置检查
 
 ```bash
-node --version   # 需要 >= 18（本机 26 已满足）
-npm --version
-git config --global user.name    # 应为 minecraft1024a
-git config --global user.email
+python3 --version   # 需要 >= 3.10
+uv --version        # https://docs.astral.sh/uv/
 ```
 
 发布前先本地验证一遍：
 
 ```bash
-npm install
-npm run build        # 编译到 dist/
-npm start            # 能正常启动即 OK
+uv sync                 # 创建 .venv 并安装依赖（含本包，可编辑模式）
+uv run mofox-docs-mcp   # 能正常启动（Ctrl+C 退出）即 OK
 ```
 
-确认 `package.json`：
+确认 `pyproject.toml`：
 
-- `name`: `mofox-docs-mcp`（已确认 npm 上未被占用）
+- `name`: `mofox-docs-mcp`（已确认 PyPI 上未被占用）
 - `version`: `0.1.0`
-- `bin`: `mofox-docs-mcp` → `./dist/index.js`
-- `files`: 只发布 `dist/` 与 `README.md`
 
 ---
 
-## 1. 发布到 GitHub
-
-### 方式 A：用 gh CLI（推荐）
+## 1. 构建
 
 ```bash
-# 安装 gh：https://cli.github.com
-gh auth login          # 选择 HTTPS + 浏览器授权
-
-# 在 GitHub 上创建仓库（默认私有可改 --public）
-gh repo create mofox-docs-mcp --public --source . --remote origin --push
+uv build    # 生成 dist/mofox_docs_mcp-*.tar.gz 与 dist/mofox_docs_mcp-*.whl
 ```
 
-### 方式 B：网页创建
-
-1. 打开 https://github.com/new，仓库名 `mofox-docs-mcp`，Public，不勾选任何初始化文件。
-2. 本地执行：
+发布前可用 [TestPyPI](htt.ps://test.pypi.org) 预演：
 
 ```bash
-git init
-git add -A
-git commit -m "feat: Neo-MoFox 官方文档 MCP 服务器"
-git branch -M master
-git remote add origin https://github.com/minecraft1024a/mofox-docs-mcp.git
-git push -u origin master
+uv publish --publish-url https://test.pypi.org/legacy/ --token pypi-xxxx
 ```
-
-### 可选：创建 GitHub Release
-
-```bash
-# 打 tag 并推送（Release 会自动关联）
-git tag v0.1.0
-git push origin v0.1.0
-```
-
-然后在仓库页面 New release，选 tag `v0.1.0`，写 release notes。
 
 ---
 
-## 2. 发布到 npm
+## 2. 登录并发布到 PyPI
 
-### 2.1 登录 npm
+### 方式 A：API Token（推荐）
+
+1. 在 <https://pypi.org/manage/account/token/> 创建一个 API Token（范围可选限定到本项目）。
+2. 发布：
 
 ```bash
-npm login
+uv publish --token pypi-xxxx
 ```
 
-会要求输入 npm 用户名、密码（一次性密码）。登录后可验证：
+或用环境变量：
 
 ```bash
-npm whoami   # 输出你的 npm 用户名即成功
+UV_PUBLISH_TOKEN=pypi-xxxx uv publish
 ```
 
-### 2.2 发布
+### 方式 B：trusted publishing（GitHub Actions 自动发布）
+
+在 PyPI 项目设置中配置 GitHub Trusted Publisher 后，推送 tag 时由 CI 调用 `uv publish`，无需手动 token。
+
+### 验证
 
 ```bash
-npm publish
-```
-
-### 2.3 验证
-
-```bash
-npx -y mofox-docs-mcp --help
+uvx mofox-docs-mcp --help
 ```
 
 能打印帮助即发布成功。任何 MCP 客户端现在都可以：
 
 ```bash
-npx -y mofox-docs-mcp
+uvx mofox-docs-mcp
 ```
 
 ---
@@ -109,13 +81,11 @@ npx -y mofox-docs-mcp
 改完代码后按语义化版本升级并重新发布：
 
 ```bash
-npm run build
-npm version patch   # 0.1.0 -> 0.1.1（或 minor / major）
-npm publish
-git push origin master --tags
+# 手动把 pyproject.toml 与 src/mofox_docs_mcp/__init__.py 的 __version__ 同步升级
+# 0.1.0 -> 0.1.1（patch）或 minor / major
+uv build && uv publish --token pypi-xxxx
+git tag v0.1.1 && git push origin master --tags
 ```
-
-> `npm version` 会自动修改 `package.json` 的 version 并打一个本地 git tag，记得 `git push --tags`。
 
 ---
 
@@ -125,8 +95,8 @@ git push origin master --tags
 
 ```toml
 [mcp.stdio_servers.mofox-docs]
-command = "npx"
-args = ["-y", "mofox-docs-mcp"]
+command = "uvx"
+args = ["mofox-docs-mcp"]
 instructions = "提供 Neo-MoFox 官方文档的搜索与阅读功能，当用户询问框架功能、配置、插件开发、API 用法时使用"
 ```
 
@@ -136,11 +106,11 @@ instructions = "提供 Neo-MoFox 官方文档的搜索与阅读功能，当用�
 
 | 现象 | 原因 / 解决 |
 | --- | --- |
-| `npm publish` 报 `ENEEDAUTH` / `403` | 未登录或 token 过期：先 `npm login`，再 `npm whoami` 确认 |
-| 报 `403 You cannot publish over the previously published versions` | 版本号未递增：`npm version patch` 后再发 |
-| 报 `409` / `E409` | 包名已被占用：换名，或确认大小写（`mofox-docs-mcp` 唯一） |
-| `git push` 被拒 | 远端已有内容：先 `git pull --rebase origin master` 再推 |
-| 发布后 `npx` 还是旧版本 | 清除 npx 缓存：`npm cache clean --force` 或用 `npx -y mofox-docs-mcp@latest` |
+| `uv publish` 报 403 | 未带 token 或 token 无权限：先在 PyPI 创建/更新 API Token |
+| 报 "File already exists" / 版本冲突 | 版本号未递增：升级 `pyproject.toml` 与 `__init__.py` 的 version 后再发 |
+| `uvx` 还是旧版本 | 清缓存：`uv cache clean mofox-docs-mcp` 或指定 `mofox-docs-mcp==x.y.z` |
+| 包名被占用 | 换名；PyPI 上 `mofox-docs-mcp` 归先注册者所有 |
+| `git push` 被拒 | 先 `git pull --rebase origin master` 再推 |
 
 ---
 
@@ -148,8 +118,9 @@ instructions = "提供 Neo-MoFox 官方文档的搜索与阅读功能，当用�
 
 | 文件 | 说明 |
 | --- | --- |
-| `src/index.ts` | MCP 服务器源码（单文件，含 3 个工具 + 2 类资源） |
-| `package.json` | npm 包配置（bin / files / scripts） |
-| `tsconfig.json` | TypeScript 编译配置 |
+| `src/mofox_docs_mcp/server.py` | MCP 服务器源码（3 个工具 + 2 类资源 + CLI 解析） |
+| `src/mofox_docs_mcp/__init__.py` | 包元数据与版本号 |
+| `src/mofox_docs_mcp/__main__.py` | `python -m mofox_docs_mcp` 入口 |
+| `pyproject.toml` | PyPI 包配置（依赖 / 入口脚本 / 构建后端） |
 | `README.md` | 使用文档（会随包发布） |
-| `dist/` | 编译产物（npm publish 发布内容，勿手改） |
+| `dist/` | 构建产物（`uv build` 生成，勿手改） |
