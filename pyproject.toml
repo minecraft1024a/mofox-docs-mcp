@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "mofox-docs-mcp"
-version = "0.1.0"
+version = "0.1.1"
 description = "Neo-MoFox 官方文档 MCP 服务器：通过 Model Context Protocol 搜索与阅读 MoFox-Bot-Docs 文档"
 readme = "README.md"
 license = "MIT"
@@ -39,7 +39,7 @@ dependencies = [
 
 [project.urls]
 Homepage = "https://github.com/minecraft1024a/mofox-docs-mcp"
-Documentation = "https://docs.mofox-sama.com"
+Documentation = "https://docs.mofox.chat"
 
 [project.scripts]
 mofox-docs-mcp = "mofox_docs_mcp.server:main"

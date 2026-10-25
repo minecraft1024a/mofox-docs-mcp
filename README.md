@@ -2,7 +2,7 @@
 
 Neo-MoFox 官方文档 MCP 服务器：通过 [Model Context Protocol](https://modelcontextprotocol.io) 提供 MoFox-Bot-Docs 文档站的检索与阅读能力，供 Claude、Cursor、Neo-MoFox 等 MCP 客户端直接搜索与阅读官方文档。
 
-数据源为文档站 JSON API（`https://docs.mofox-sama.com/api/docs/*`），与 MoFox 插件市场中的 `mofox_docs` 插件共用同一套 `llms.json` 索引，行为一致。
+数据源为文档站 JSON API（`https://docs.mofox.chat/api/docs/*`），与 MoFox 插件市场中的 `mofox_docs` 插件共用同一套 `llms.json` 索引，行为一致。
 
 ## 功能
 
@@ -79,7 +79,7 @@ instructions = "提供 Neo-MoFox 官方文档的搜索与阅读功能，当用�
 
 | 参数 | 说明 | 默认值 |
 | --- | --- | --- |
-| `--base-url <url>` | 文档站地址 | `https://docs.mofox-sama.com` |
+| `--base-url <url>` | 文档站地址 | `https://docs.mofox.chat` |
 | `--timeout <秒>` | 请求超时 | `30` |
 | `--cache-ttl <秒>` | 索引缓存时长（`llms.json`） | `300` |
 

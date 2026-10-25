@@ -5,7 +5,7 @@
   - 工具：search_docs / list_docs / get_doc
   - 资源：mofox://docs（全量索引）、mofox://docs/<id>（单篇正文）
 
-数据源为文档站 JSON API（https://docs.mofox-sama.com/api/docs/*），
+数据源为文档站 JSON API（https://docs.mofox.chat/api/docs/*），
 与 MoFox 插件市场中的 mofox_docs 插件共用同一套索引（llms.json）。
 """
 
@@ -31,7 +31,7 @@ from . import __version__
 
 logging.getLogger("httpx").setLevel(logging.WARNING)
 
-DEFAULT_BASE_URL = "https://docs.mofox-sama.com"
+DEFAULT_BASE_URL = "https://docs.mofox.chat"
 DEFAULT_TIMEOUT_S = 30.0
 DEFAULT_CACHE_TTL_S = 300.0
 
